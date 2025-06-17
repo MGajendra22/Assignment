@@ -1,0 +1,18 @@
+[INFO] Server started
+[ERROR] Failed to connect to DB
+[WARNING] High memory usage
+[ERROR] Timeout occurred
+[ERROR] Exception
+[ERROR] Again start it
+[WARNING] Harmful Status
+[ERROR] Utilize fmt
+[WARNING] Correct "sto"
+[WARNING] Correct "fms"
+[ERROR] Timeout occurred
+[INFO] Database is uptodate
+[WARNING] High memory usage
+[INFO] Database has been created
+[ERROR] Timeout occurred
+[INFO] File closed
+[INFO] File has been closed
+
