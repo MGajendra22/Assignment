@@ -15,6 +15,15 @@ type task struct {
 // Container to contain tasks
 var cont []task
 
+//stringer
+
+func (t task) String() string {
+
+	return fmt.Sprintf("Task %v : %v | Is Done? : %v",t.id,t.description,t.status)
+}
+
+
+
 // Global ID generator closure
 var temp_id func() int = idgen()
 func idgen() func() int {
@@ -32,12 +41,14 @@ func addtask(s string) {
 }
 
 // List all pending tasks
-func ListTask() {
+func ListPendingTask() {
 	for _, val := range cont {
 		if val.status==false {
-			fmt.Printf("Task %d : %s\n", val.id, val.description)
+			fmt.Println(val)
 		}
 	}
+
+	fmt.Println("\n")
 }
 
 // Mark task as completed
@@ -53,19 +64,28 @@ func CompleteTask(curid int) {
 	fmt.Println("Invalid Task ID ")
 }
 
+func ListAlltasks(){
+
+	for i,_:=range cont{
+        fmt.Println(cont[i])
+	}
+
+	fmt.Println("\n")
+}
+
 func main() {
 
 	fmt.Println("----- Welcome to Zopdev Task Manager -----")
 
 	for {
-		fmt.Println("\nTo add task : 1\n To Show list : 2\n To complete task : 3\n Exit : 0 ")
+		fmt.Println("To add task : 1\nList Pending Task : 2\nTo complete task : 3\nTo show all Tasks : 4\nTo Exit : 0\n")
 
 		var inp int
 
-		 fmt.Print("Enter choice: ")
+		 fmt.Print("------- Enter choice: ")
 		    _, err := fmt.Scanf("%d\n", &inp)
 		if err != nil {
-			fmt.Println("Invalid Choice, Enter again")
+			fmt.Println("Oops! Invalid Choice, Enter again\n")
 			continue
 		}
 
@@ -77,7 +97,8 @@ func main() {
 			addtask(t)
 
 		case 2:
-			ListTask()
+			fmt.Println("\nList of Pending Tasks : - ")
+			ListPendingTask()
 
 		case 3:
 			var temp_id int
@@ -85,12 +106,16 @@ func main() {
 			fmt.Scanf("%d\n", &temp_id)
 			CompleteTask(temp_id)
 
+		case 4:
+			fmt.Println("All tasks :- \n")
+			ListAlltasks()	
+
 		case 0:
 			fmt.Println("Exit")
 			os.Exit(0)
 
 		default:
-			fmt.Println("Invalid option. , Try again ")
+			fmt.Println("Oops ! Invalid option. , Try again \n")
 		}
 	}
 }
