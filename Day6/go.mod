@@ -1,3 +1,4 @@
-module github/MGajendra22/Assignment/Day6/assignment
+module github.com/MGajendra22/Fresh-Assignment/Day6
 
-go 1.24.4
+
+go 1.22

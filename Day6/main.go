@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"log"
 )
 
 type task struct {
@@ -47,10 +48,16 @@ func GetTaskById(id int, h *handle) *task {
 func (h *handle) handleAllTasks(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "GET" {
-		w.Write([]byte("List of all tasks :- \n"))
+		_, err := w.Write([]byte("List of all tasks :- \n"))
+		if err != nil {
+			fmt.Printf("Error")
+		}
 		for _, val := range h.ptr.cont {
 			str := fmt.Sprintf("Task %d : %s is done? %v \n", val.id, val.desc, val.status)
-			w.Write([]byte(str))
+			_, err := w.Write([]byte(str))
+			if err != nil {
+				fmt.Printf("Error")
+			}
 		}
 	}
 }
@@ -60,7 +67,10 @@ func (h *handle) handleAddTask(w http.ResponseWriter, r *http.Request) {
 		bodyBy, err := io.ReadAll(r.Body)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("invalid body"))
+			_, err := w.Write([]byte("invalid body"))
+			if err != nil {
+				fmt.Printf("Error")
+			}
 			return
 		}
 
@@ -73,7 +83,10 @@ func (h *handle) handleAddTask(w http.ResponseWriter, r *http.Request) {
 			h.ptr.cont = append(h.ptr.cont, t)
 			str := fmt.Sprintf("Task %s added succesfully with id : %d", desc, t.id)
 			w.WriteHeader(http.StatusCreated)
-			w.Write([]byte(str))
+			_, err := w.Write([]byte(str))
+			if err != nil {
+				fmt.Printf("Error")
+			}
 		}
 	}
 }
@@ -87,13 +100,19 @@ func (h *handle) handleGetTaskById(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte(`invalid id`))
+			_, err := w.Write([]byte(`invalid id`))
+			if err != nil {
+				fmt.Printf("Error")
+			}
 			return
 		}
 
 		t := GetTaskById(id, h)
 		str := fmt.Sprintf("Task of id : %d is %s", id, t.desc)
-		w.Write([]byte(str))
+		_, err = w.Write([]byte(str))
+		if err != nil {
+			fmt.Printf("Error")
+		}
 	}
 }
 
@@ -110,11 +129,17 @@ func (h *handle) handleCompleteTask(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if h.ptr.cont[id].status {
-			w.Write([]byte("Task is already Completed"))
+			_, err := w.Write([]byte("Task is already Completed"))
+			if err != nil {
+				fmt.Printf("Error")
+			}
 		} else {
 			h.ptr.cont[id].status = true
 			str := fmt.Sprintf("Task %d is completed ", id)
-			w.Write([]byte(str))
+			_, err := w.Write([]byte(str))
+			if err != nil {
+				fmt.Printf("Error")
+			}
 
 		}
 
@@ -125,11 +150,17 @@ func (h *handle) handlePendingTasks(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "GET" {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("List of Pending tasks :- \n"))
+		_, err := w.Write([]byte("List of Pending tasks :- \n"))
+		if err != nil {
+			fmt.Printf("Error")
+		}
 		for _, val := range h.ptr.cont {
 			if !val.status {
 				str := fmt.Sprintf("Task %d : %s is Not completed yet \n", val.id, val.desc)
-				w.Write([]byte(str))
+				_, err := w.Write([]byte(str))
+				if err != nil {
+					fmt.Printf("Error")
+				}
 			}
 		}
 
@@ -154,6 +185,6 @@ func main() {
 	http.HandleFunc("/do/{id}", h.handleCompleteTask)
 
 	fmt.Println("Server Started running on http://localhost:8000/")
-	http.ListenAndServe(":8000", nil)
+	log.Fatal(http.ListenAndServe(":8000", nil))
 
 }
