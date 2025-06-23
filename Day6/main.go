@@ -6,12 +6,14 @@ import (
 	"net/http"
 	"strconv"
 	"log"
+	"encoding/json"
+
 )
 
 type task struct {
-	id     int
-	desc   string
-	status bool
+	Id     int     `json:"id"`
+	Desc   string  `json:"desc"`
+	Status bool    `json:"status"`
 }
 
 type tasks struct {
@@ -38,33 +40,43 @@ func GetTaskById(id int, h *handle) *task {
 
 	for _, val := range h.ptr.cont {
 
-		if val.id == id {
+		if val.Id == id {
 			return &val
 		}
 	}
 	return nil
 }
 
-func (h *handle) handleAllTasks(w http.ResponseWriter, r *http.Request) {
+func (h* handle) handleAll(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == "GET" {
+	switch r.Method {
+		case "GET" : {
 		_, err := w.Write([]byte("List of all tasks :- \n"))
 		if err != nil {
 			fmt.Printf("Error")
 		}
 		for _, val := range h.ptr.cont {
-			str := fmt.Sprintf("Task %d : %s is done? %v \n", val.id, val.desc, val.status)
-			_, err := w.Write([]byte(str))
+			body,err:=json.Marshal(val)
 			if err != nil {
-				fmt.Printf("Error")
-			}
+            panic(err)
+            }
+			var t1 task
+			err=json.Unmarshal(body,&t1)
+			if err != nil {
+            panic(err)
+            }
+			 _,err=w.Write([]byte(body))
+			 if err != nil {
+            panic(err)
+            }
+
 		}
 	}
-}
 
-func (h *handle) handleAddTask(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
+	case "POST" :{
 		bodyBy, err := io.ReadAll(r.Body)
+		fmt.Println(string(bodyBy))
+
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			_, err := w.Write([]byte("invalid body"))
@@ -80,45 +92,26 @@ func (h *handle) handleAddTask(w http.ResponseWriter, r *http.Request) {
 			return
 		} else {
 			t := task{temp_id(), desc, false}
-			h.ptr.cont = append(h.ptr.cont, t)
-			str := fmt.Sprintf("Task %s added succesfully with id : %d", desc, t.id)
+			body,err:=json.Marshal(t)
+			if err != nil {
+            panic(err)
+            }
+			var t1 task
+			err=json.Unmarshal(body,&t1)
+			if err != nil {
+            panic(err)
+            }
+			h.ptr.cont = append(h.ptr.cont, t1)
 			w.WriteHeader(http.StatusCreated)
-			_, err := w.Write([]byte(str))
+			_,err=w.Write([]byte(body))
 			if err != nil {
-				fmt.Printf("Error")
-			}
+            panic(err)
+            }
+			
 		}
 	}
-}
 
-func (h *handle) handleGetTaskById(w http.ResponseWriter, r *http.Request) {
-
-	if r.Method == "GET" {
-
-		idstr := r.PathValue("id")
-		id, err := strconv.Atoi(idstr)
-
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			_, err := w.Write([]byte(`invalid id`))
-			if err != nil {
-				fmt.Printf("Error")
-			}
-			return
-		}
-
-		t := GetTaskById(id, h)
-		str := fmt.Sprintf("Task of id : %d is %s", id, t.desc)
-		_, err = w.Write([]byte(str))
-		if err != nil {
-			fmt.Printf("Error")
-		}
-	}
-}
-
-func (h *handle) handleCompleteTask(w http.ResponseWriter, r *http.Request) {
-
-	if r.Method == "PUT" {
+	case "PUT" :{
 
 		idstr := r.PathValue("id")
 		id, err := strconv.Atoi(idstr)
@@ -128,13 +121,14 @@ func (h *handle) handleCompleteTask(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if h.ptr.cont[id].status {
+		if h.ptr.cont[id].Status {
 			_, err := w.Write([]byte("Task is already Completed"))
 			if err != nil {
 				fmt.Printf("Error")
 			}
 		} else {
-			h.ptr.cont[id].status = true
+
+			h.ptr.cont[id].Status = true
 			str := fmt.Sprintf("Task %d is completed ", id)
 			_, err := w.Write([]byte(str))
 			if err != nil {
@@ -144,7 +138,12 @@ func (h *handle) handleCompleteTask(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
+
+	}
 }
+
+
+
 
 func (h *handle) handlePendingTasks(w http.ResponseWriter, r *http.Request) {
 
@@ -155,9 +154,17 @@ func (h *handle) handlePendingTasks(w http.ResponseWriter, r *http.Request) {
 			fmt.Printf("Error")
 		}
 		for _, val := range h.ptr.cont {
-			if !val.status {
-				str := fmt.Sprintf("Task %d : %s is Not completed yet \n", val.id, val.desc)
-				_, err := w.Write([]byte(str))
+			if !val.Status {
+				body,err:=json.Marshal(val)
+			if err != nil {
+            panic(err)
+            }
+			var t1 task
+			err=json.Unmarshal(body,&t1)
+			if err != nil {
+            panic(err)
+            }
+		    _,err=w.Write([]byte(body))
 				if err != nil {
 					fmt.Printf("Error")
 				}
@@ -178,11 +185,10 @@ func main() {
 
 	h.ptr.cont = append(h.ptr.cont, a1, a2)
 
-	http.HandleFunc("/showall", h.handleAllTasks)
-	http.HandleFunc("/task/{id}", h.handleGetTaskById)
-	http.HandleFunc("/add", h.handleAddTask)
-	http.HandleFunc("/showpending", h.handlePendingTasks)
-	http.HandleFunc("/do/{id}", h.handleCompleteTask)
+	http.HandleFunc("/task", h.handleAll)
+	http.HandleFunc("/task/{id}", h.handleAll)
+	http.HandleFunc("/pending", h.handlePendingTasks)
+
 
 	fmt.Println("Server Started running on http://localhost:8000/")
 	log.Fatal(http.ListenAndServe(":8000", nil))
