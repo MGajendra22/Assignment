@@ -5,7 +5,6 @@ import (
 	"time"
 )
 
-
 func convert(amount int, source string, target string) float32 {
 
 	var str string = source + target

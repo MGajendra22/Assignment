@@ -5,117 +5,124 @@ import (
 	"os"
 )
 
-// Task Struct
 type task struct {
 	id          int
 	description string
 	status      bool
 }
 
-// Container to contain tasks
 var cont []task
 
-//stringer
-
 func (t task) String() string {
-
-	return fmt.Sprintf("Task %v : %v | Is Done? : %v",t.id,t.description,t.status)
+	return fmt.Sprintf("Task %v : %v | Is Done? : %v", t.id, t.description, t.status)
 }
 
-
-
-// Global ID generator closure
-var temp_id func() int = idgen()
 func idgen() func() int {
 	id := 0
+
 	return func() int {
 		id++
 		return id
 	}
 }
 
-// Function to add Task
+var tempID = idgen()
+
 func addtask(s string) {
-	t1 := task{temp_id(), s, false}
+	t1 := task{tempID(), s, false}
 	cont = append(cont, t1)
 }
 
-// List all pending tasks
 func ListPendingTask() {
 	for _, val := range cont {
-		if val.status==false {
+		if !val.status {
 			fmt.Println(val)
 		}
 	}
-
-	fmt.Println("\n")
 }
 
-// Mark task as completed
 func CompleteTask(curid int) {
-
 	for i := range cont {
 		if cont[i].id == curid {
 			cont[i].status = true
-			fmt.Printf("Task %d marked as completed.\n", curid)
+
+			fmt.Printf("Task %d marked as completed.", curid)
+			
 			return
 		}
 	}
+
 	fmt.Println("Invalid Task ID ")
 }
 
-func ListAlltasks(){
-
-	for i,_:=range cont{
-        fmt.Println(cont[i])
+func ListAlltasks() {
+	for i:= range cont {
+		fmt.Println(cont[i])
 	}
-
-	fmt.Println("\n")
 }
 
-func main() {
+const (
+	case0 = 0
+	case1 = 1
+	case2 = 2
+	case3 = 3
+	case4 = 4
+)
 
+func main() {
 	fmt.Println("----- Welcome to Zopdev Task Manager -----")
 
 	for {
-		fmt.Println("To add task : 1\nList Pending Task : 2\nTo complete task : 3\nTo show all Tasks : 4\nTo Exit : 0\n")
+		fmt.Println("To add task : 1\nList Pending Task : 2\nTo complete task : 3\nTo show all Tasks : 4\nTo Exit : 0")
 
 		var inp int
 
-		 fmt.Print("------- Enter choice: ")
-		    _, err := fmt.Scanf("%d\n", &inp)
+		fmt.Print("------- Enter choice: ")
+
+		_, err := fmt.Scanf("%d", &inp)
 		if err != nil {
-			fmt.Println("Oops! Invalid Choice, Enter again\n")
+			fmt.Println("Oops! Invalid Choice, Enter again")
 			continue
 		}
 
 		switch inp {
-		case 1:
+		case case1:
 			var t string
-			fmt.Print("Enter Task: ")
-			fmt.Scanf("%s\n", &t) 
-			addtask(t)
 
-		case 2:
+			fmt.Print("Enter Task: ")
+
+			_, err := fmt.Scanf("%s", &t)
+			if err != nil {
+				fmt.Println("Error")
+			}
+
+			addtask(t)
+		case case2:
 			fmt.Println("\nList of Pending Tasks : - ")
 			ListPendingTask()
 
-		case 3:
-			var temp_id int
+		case case3:
+			var tempID int
+
 			fmt.Print("Enter Task ID to complete: ")
-			fmt.Scanf("%d\n", &temp_id)
-			CompleteTask(temp_id)
 
-		case 4:
-			fmt.Println("All tasks :- \n")
-			ListAlltasks()	
+			_,err:=fmt.Scanf("%d\n", &tempID)
+			if err != nil {
+				fmt.Println("Error")
+			}
 
-		case 0:
+			CompleteTask(tempID)
+
+		case case4:
+			fmt.Println("All tasks :- ")
+			ListAlltasks()
+
+		case case0:
 			fmt.Println("Exit")
 			os.Exit(0)
 
 		default:
-			fmt.Println("Oops ! Invalid option. , Try again \n")
+			fmt.Println("Oops ! Invalid option. , Try again ")
 		}
 	}
 }

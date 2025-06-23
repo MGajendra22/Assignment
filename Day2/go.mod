@@ -1,3 +1,4 @@
-module github.com/MGajendra22/Fresh-Assignment/assignment
+module github.com/MGajendra22/Fresh-Assignment/Day2
 
-go 1.24.4
+
+go 1.22
