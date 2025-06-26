@@ -1,0 +1,24 @@
+mode: set
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:20.31,23.2 1 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:28.25,30.20 2 1
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:30.20,33.3 2 1
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:37.24,40.2 2 1
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:43.24,44.27 1 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:44.27,45.19 1 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:45.19,47.4 1 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:54.30,56.22 1 1
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:56.22,57.26 1 1
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:57.26,61.4 3 1
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:63.2,63.33 1 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:66.21,68.25 1 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:68.25,70.3 1 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:75.13,79.6 2 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:79.6,86.17 5 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:86.17,88.12 2 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:91.3,91.14 1 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:92.10,96.14 4 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:98.10,100.21 2 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:102.10,106.25 4 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:108.10,110.18 2 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:112.10,114.14 2 0
+github.com/MGajendra22/Fresh-Assignment/assignment/main.go:116.11,117.54 1 0
